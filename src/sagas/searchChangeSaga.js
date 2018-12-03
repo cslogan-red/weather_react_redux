@@ -2,7 +2,7 @@ import { call, put, select } from 'redux-saga/effects';
 import LocationService from '../services/LocationService';
 import WeatherService from '../services/WeatherService';
 import DataService from '../services/DataService';
-import {  SEARCH_CHANGE_SUCCESS, SEARCH_CHANGE_FAILURE, 
+import {  SEARCH_CHANGE_SUCCESS, SEARCH_CHANGE_INIT,
           LOAD_APP_SUCCESS, LOAD_APP_REQ, EXTENDED_CLOSE,
           HOURLY_CLOSE } from '../actions/actionTypes';
 /**
@@ -39,7 +39,7 @@ export function* _searchChange() {
                       periodData : FORECAST.periods,
                 hourlyPeriodData : HOURLY.periods
             },
-            KEY = yield call( new DataService()._getUserId),
+            KEY = new DataService()._getUserId(),
             RESULT = _buildSearchResult( SEARCH_OBJ);
             yield call( new DataService()._persistDocument, KEY, {
                 locationName : RESULT.locationName,	
@@ -52,20 +52,22 @@ export function* _searchChange() {
                    timeStamp : Date.now()
             });
             yield put( { type : SEARCH_CHANGE_SUCCESS, 
-                      payload : {
-                        locationName : RESULT.locationName,	
-                            location : RESULT.location,
-                            rightNow : RESULT.rightNow,
-                             current : RESULT.current,
-                             outlook : RESULT.outlook, 
-                        } 
-                    });
-            yield put( { type : LOAD_APP_SUCCESS});
+                payload : {
+                locationName : RESULT.locationName,	
+                    location : RESULT.location,
+                    rightNow : RESULT.rightNow,
+                     current : RESULT.current,
+                     outlook : RESULT.outlook, 
+                } 
+            });
         } else {
-            yield put( { type : LOAD_APP_SUCCESS});
+            yield put( { type : SEARCH_CHANGE_INIT});
         }
+        yield put( { type : LOAD_APP_SUCCESS });
     } catch ( error) {
-        yield put( { type : SEARCH_CHANGE_FAILURE, error : error.message });
+        // re-init the app in this case
+        yield put( { type : LOAD_APP_SUCCESS});
+        yield put( { type : SEARCH_CHANGE_INIT});
     }
 }
 

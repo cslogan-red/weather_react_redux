@@ -86,7 +86,7 @@ class App extends Component {
 					</div>
 				) : (
 					<div className="app__container">
-						{ !location ? (
+						{ !locationName ? (
 							<div className="app__search">
 								<SearchBar
 									showSpinner={showSpinner}
@@ -138,7 +138,8 @@ locationName : state.searchChange.locationName,
 	  hourly : state.hourly.hourly,
   showHourly : state.hourly.show,
  showSpinner : state.loadApp.showSpinner,
- hideForInit : state.loadApp.hideForInit
+ hideForInit : state.loadApp.hideForInit,
+ 	   error : state.loadApp.error
 });
 // mapDispatchToProps redux implementaion, handles firing actions
 // to the redux store for state update

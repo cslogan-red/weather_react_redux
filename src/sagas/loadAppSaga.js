@@ -1,7 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 import DataService from '../services/DataService';
 import { SEARCH_CHANGE, SEARCH_CHANGE_SUCCESS, 
-         SEARCH_CHANGE_FAILURE, LOAD_APP_SUCCESS } from '../actions/actionTypes';
+        SEARCH_CHANGE_INIT, LOAD_APP_SUCCESS } from '../actions/actionTypes';
 /**
  * loadAppSaga.js
  * 
@@ -20,13 +20,19 @@ export function* _loadApp() {
 			if ( USER_DOC.timeStamp && Date.now() - USER_DOC.timeStamp > EXP_SESSION) {
                 yield put( { type : SEARCH_CHANGE, payload : USER_DOC.location });
 			} else {
-                yield put( { type : LOAD_APP_SUCCESS });
                 yield put( { type : SEARCH_CHANGE_SUCCESS, 
                           payload : _buildCacheResult( USER_DOC) });
+                yield put( { type : LOAD_APP_SUCCESS });
 			}
-		}
+		} else {
+            // re-init the app in this case
+            yield put( { type : LOAD_APP_SUCCESS });
+            yield put( { type : SEARCH_CHANGE_INIT });
+        }
     } catch ( error) {
-        yield put( { type : SEARCH_CHANGE_FAILURE, error : error.message });
+        // re-init the app in this case
+        yield put( { type : LOAD_APP_SUCCESS });
+        yield put( { type : SEARCH_CHANGE_INIT });
     }
 }
 

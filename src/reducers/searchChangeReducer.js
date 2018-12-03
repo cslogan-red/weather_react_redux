@@ -1,5 +1,5 @@
 import { SEARCH_CHANGE, SEARCH_CHANGE_SUCCESS,
-         SEARCH_CHANGE_FAILURE } from '../actions/actionTypes';
+         SEARCH_CHANGE_INIT, SEARCH_CHANGE_FAILURE } from '../actions/actionTypes';
 /**
  * searchChangeReducer.js
  * 
@@ -25,6 +25,8 @@ const _searchChangeReducer = ( state = INIT_STATE, action) => {
             return Object.assign( {}, state, { location : action.payload });
         case SEARCH_CHANGE_SUCCESS:
             return Object.assign( {}, state, action.payload);
+        case SEARCH_CHANGE_INIT:
+            return Object.assign( {}, state, { locationName : '' });
         case SEARCH_CHANGE_FAILURE :
             return Object.assign( {}, state, action.error);
         default:

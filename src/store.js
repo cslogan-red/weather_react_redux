@@ -16,15 +16,10 @@ const sagaMiddleware = createSagaMiddleware();
 // configures default store
 const _configureStore = () => {
 
-    // dev tools middleware
-    const reduxDevTools =
-        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
-
     // create a redux store with rootReducer and middleware
     const store = createStore(
         rootReducer,
-        compose( applyMiddleware( sagaMiddleware), reduxDevTools)
-    );
+        compose( applyMiddleware( sagaMiddleware)));
 
     // run the root saga
     sagaMiddleware.run( rootSaga);
