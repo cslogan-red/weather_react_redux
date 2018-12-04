@@ -12,12 +12,12 @@ export function* _loadApp() {
 
     try {
         // lookup device Id and device document
-            const USER_KEY = yield call( new DataService()._getUserId),
-                  USER_DOC = yield call( new DataService()._getDocument, USER_KEY),
-               EXP_SESSION = 300000;
-		if ( USER_DOC && USER_DOC.location) { 
-			// if cached data exists, check if session has expired
-			if ( USER_DOC.timeStamp && Date.now() - USER_DOC.timeStamp > EXP_SESSION) {
+        const USER_KEY = yield call( new DataService()._getUserId),
+              USER_DOC = yield call( new DataService()._getDocument, USER_KEY),
+           EXP_SESSION = 300000;
+        if ( USER_DOC && USER_DOC.location) { 
+            // if cached data exists, check if session has expired
+            if ( USER_DOC.timeStamp && Date.now() - USER_DOC.timeStamp > EXP_SESSION) {
                  yield put( { type : SEARCH_CHANGE, payload : USER_DOC.location });
             } else {
                 yield put( { type : SEARCH_CHANGE_SUCCESS, 
