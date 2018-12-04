@@ -18,13 +18,13 @@ export function* _loadApp() {
 		if ( USER_DOC && USER_DOC.location) { 
 			// if cached data exists, check if session has expired
 			if ( USER_DOC.timeStamp && Date.now() - USER_DOC.timeStamp > EXP_SESSION) {
-                yield put( { type : SEARCH_CHANGE, payload : USER_DOC.location });
-			} else {
+                 yield put( { type : SEARCH_CHANGE, payload : USER_DOC.location });
+            } else {
                 yield put( { type : SEARCH_CHANGE_SUCCESS, 
                           payload : _buildCacheResult( USER_DOC) });
                 yield put( { type : LOAD_APP_SUCCESS });
-			}
-		} else {
+            }
+        } else {
             // re-init the app in this case
             yield put( { type : LOAD_APP_SUCCESS });
             yield put( { type : SEARCH_CHANGE_INIT });

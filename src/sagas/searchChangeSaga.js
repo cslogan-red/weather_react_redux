@@ -27,10 +27,11 @@ export function* _searchChange() {
                 yield call( new LocationService()._geocodeLocationAsync, LOC),
                  GRID = 
                 yield call( new WeatherService()._getGridResultAsync, GEO.lat, GEO.lng);
-            const [FORECAST, CURRENT, HOURLY] =
+            const [FORECAST, CURRENT, HOURLY, KEY] =
                 yield [call( new WeatherService()._getForecastDataAsync, GRID.forecastURL),
                        call( new WeatherService()._getCurrentStationAsync, GRID.stationsURL),
-                       call( new WeatherService()._getHourlyForecastDataAsync, GRID.hourlyURL)];
+                       call( new WeatherService()._getHourlyForecastDataAsync, GRID.hourlyURL),
+                       call( new DataService()._getUserId)];
             const LOCATION = GRID.locationName;
             const SEARCH_OBJ = {
                     locationText : LOC,
@@ -39,7 +40,6 @@ export function* _searchChange() {
                       periodData : FORECAST.periods,
                 hourlyPeriodData : HOURLY.periods
             },
-            KEY = new DataService()._getUserId(),
             RESULT = _buildSearchResult( SEARCH_OBJ);
             yield call( new DataService()._persistDocument, KEY, {
                 locationName : RESULT.locationName,	
