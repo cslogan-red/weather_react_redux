@@ -12,8 +12,8 @@ export function* _loadApp() {
 
     try {
         // lookup device Id and device document
-        const USER_KEY = yield call( new DataService()._getUserId),
-              USER_DOC = yield call( new DataService()._getDocument, USER_KEY),
+        const USER_KEY = yield call( new DataService()._getUserId);
+        const USER_DOC = yield call( new DataService()._getDocument, USER_KEY),
            EXP_SESSION = 300000;
         if ( USER_DOC && USER_DOC.location) { 
             // if cached data exists, check if session has expired

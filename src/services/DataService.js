@@ -51,15 +51,15 @@ class DataService {
     }
 
     // check if user already has cookie present on device, return if so, init if not
-    _getUserId() {
+    _getUserId = async () => {
 
         const COOKIE = new Cookies(),
               PREFIX = 'default-wid';
         if ( COOKIE.get( PREFIX)) {
-            return COOKIE.get( PREFIX);
+            return await COOKIE.get( PREFIX);
         } else {
             this._initCookies();
-            return COOKIE.get( PREFIX);
+            return await COOKIE.get( PREFIX);
         }
     }
 }

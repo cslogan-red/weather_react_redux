@@ -23,15 +23,15 @@ export function* _searchChange() {
         yield put( { type : HOURLY_CLOSE});
         const LOC = yield select( _getLocation);
         if ( LOC && LOC !== '') {
+            const USER_KEY = yield call( new DataService()._getUserId);
             const GEO = 
                 yield call( new LocationService()._geocodeLocationAsync, LOC),
                  GRID = 
                 yield call( new WeatherService()._getGridResultAsync, GEO.lat, GEO.lng);
-            const [FORECAST, CURRENT, HOURLY, KEY] =
+            const [FORECAST, CURRENT, HOURLY] =
                 yield [call( new WeatherService()._getForecastDataAsync, GRID.forecastURL),
                        call( new WeatherService()._getCurrentStationAsync, GRID.stationsURL),
-                       call( new WeatherService()._getHourlyForecastDataAsync, GRID.hourlyURL),
-                       call( new DataService()._getUserId)];
+                       call( new WeatherService()._getHourlyForecastDataAsync, GRID.hourlyURL)];
             const LOCATION = GRID.locationName;
             const SEARCH_OBJ = {
                     locationText : LOC,
@@ -41,7 +41,7 @@ export function* _searchChange() {
                 hourlyPeriodData : HOURLY.periods
             },
             RESULT = _buildSearchResult( SEARCH_OBJ);
-            yield call( new DataService()._persistDocument, KEY, {
+            yield call( new DataService()._persistDocument, USER_KEY, {
                 locationName : RESULT.locationName,	
                     location : RESULT.location,
                     rightNow : RESULT.rightNow,
