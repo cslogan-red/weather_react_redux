@@ -1,4 +1,4 @@
-import { call, put, select } from 'redux-saga/effects';
+import { all, call, put, select } from 'redux-saga/effects';
 import LocationService from '../services/LocationService';
 import WeatherService from '../services/WeatherService';
 import DataService from '../services/DataService';
@@ -23,20 +23,23 @@ export function* _searchChange() {
         yield put( { type : HOURLY_CLOSE});
         const LOC = yield select( _getLocation);
         if ( LOC && LOC !== '') {
-            const USER_KEY = yield call( new DataService()._getUserId);
+            const USER_KEY = yield call( new DataService()._getUserIdAsync);
             const GEO = 
                 yield call( new LocationService()._geocodeLocationAsync, LOC),
                  GRID = 
                 yield call( new WeatherService()._getGridResultAsync, GEO.lat, GEO.lng);
-            const [FORECAST, CURRENT, HOURLY] =
-                yield [call( new WeatherService()._getForecastDataAsync, GRID.forecastURL),
-                       call( new WeatherService()._getCurrentStationAsync, GRID.stationsURL),
-                       call( new WeatherService()._getHourlyForecastDataAsync, GRID.hourlyURL)];
+            const [FORECAST, GRID_FORECAST, CURRENT, HOURLY] =
+                yield all([
+                call( new WeatherService()._getForecastDataAsync, GRID.forecastURL),
+                call( new WeatherService()._getCurrentGridForecastAsync, GRID.gridURL),
+                call( new WeatherService()._getCurrentStationAsync, GRID.stationsURL),
+                call( new WeatherService()._getHourlyForecastDataAsync, GRID.hourlyURL)]);
             const LOCATION = GRID.locationName;
             const SEARCH_OBJ = {
                     locationText : LOC,
                     locationName : LOCATION,
                    currentResult : CURRENT,
+                        gridData : GRID_FORECAST,
                       periodData : FORECAST.periods,
                 hourlyPeriodData : HOURLY.periods
             },
@@ -122,8 +125,11 @@ const _buildSearchResult = ( searchObj) => {
         retObj = {
                 location : searchObj.locationText,
             locationName : searchObj.locationName,
-                rightNow : searchObj.currentResult.temperature + ' and ' + 
-                           searchObj.currentResult.rightNow,
+                rightNow : { lineOne : searchObj.currentResult.temperature + ' and ' + 
+                                       searchObj.currentResult.rightNow,
+                             lineTwo : searchObj.currentResult.tempRealNumber - 
+                                       searchObj.gridData.windChill,
+                           lineThree : searchObj.gridData.relativeHumidity + '%' },
                  current : {
                     name : TODAY.name,
                     temp : TODAY.temperature + TODAY.temperatureUnit,

@@ -18,3 +18,9 @@
     font-size: calc(15px + 2vmin);
     padding-bottom: .5em;
 }
+
+.current__rightNow--label span {
+
+    font-style: italic;
+    font-size: calc(13px + 2vmin);
+}

@@ -23,7 +23,8 @@ class CurrentConditions extends Component {
                             <span>{locationName}</span>
                         </div>
                         <div className="current__rightNow--label">
-                            <span>Currently {rightNow}</span>
+                            <div>{rightNow.lineOne} <span>(feels like {rightNow.lineTwo}F)</span></div>
+                            <div>Relative humidity is {rightNow.lineThree}</div>
                         </div>
                         <div className="current__tile--container">
                             <WeatherTile 

@@ -20,7 +20,8 @@ class WeatherService {
                                   result.properties.relativeLocation.properties.state,
                     forecastURL : result.properties.forecast,
                     stationsURL : result.properties.observationStations,
-                      hourlyURL : result.properties.forecastHourly
+                      hourlyURL : result.properties.forecastHourly,
+                        gridURL : result.properties.forecastGridData
                  }
             } 
             return retObj;
@@ -35,7 +36,7 @@ class WeatherService {
     _getCurrentStationAsync = async ( stationURL) => {
         const URI = stationURL,
        ERR_PREFIX = ':::LOG:::WeatherService._getCurrentStationAsync(), message: ';
-        let retObj = { temperature : '', rightNow : '', icon : '' };
+       let retObj = { temperature : '', tempRealNumber : 0, rightNow : '', icon : '' };
         const STATIONS_RESULT = await fetch( URI)
         .then( res => res.json())
         .then( ( result) => {
@@ -54,7 +55,9 @@ class WeatherService {
                 if ( result.properties) {
                     retObj = {
                         temperature : this._toFahrenheit( 
-                                      result.properties.temperature.value),
+                                      result.properties.temperature.value, true),
+                     tempRealNumber : this._toFahrenheit( 
+                                      result.properties.temperature.value, false),
                            rightNow : result.properties.textDescription,
                                icon : result.properties.icon
                     }
@@ -69,11 +72,38 @@ class WeatherService {
         }
     };
 
+    // lookup current grid forecast information (windchill, relative humidity, etc)
+    // for a given grid lookup result
+    _getCurrentGridForecastAsync = async ( gridURL) => {
+        const URI = gridURL,
+       ERR_PREFIX = ':::LOG:::WeatherService._getCurrentGridForecastAsync(), message: ';
+       let retObj = { windchill : '', relativeHumidity : '' };
+        const GRID_RESULT = await fetch( URI)
+        .then( res => res.json())
+        .then( ( result) => {
+            return result;
+        }, ( error) => {
+            console.log( ERR_PREFIX + error);
+            return retObj;
+        });
+        if ( GRID_RESULT.properties.windChill && 
+             GRID_RESULT.properties.relativeHumidity) {
+                let windChill = GRID_RESULT.properties.windChill.values[0].value;
+                Math.sign( windChill) === -1 
+                    ? windChill = Math.round( windChill * -1) : windChill = 0;
+                retObj = {
+                    windChill : windChill,
+             relativeHumidity : GRID_RESULT.properties.relativeHumidity.values[0].value
+                }
+        } 
+        return retObj;
+    };
+
     // lookup forecast data based on grid lookup result
     _getForecastDataAsync = async ( forecastURL) => {
         const URI = forecastURL,
        ERR_PREFIX = ':::LOG:::WeatherService._getForecastDataAsync(), message: ';
-        let retObj = { periods : '' };
+       let retObj = { periods : '' };
         return fetch( URI)
         .then( res => res.json())
         .then( ( result) => {
@@ -91,7 +121,7 @@ class WeatherService {
     _getHourlyForecastDataAsync = async ( forecastURL) => {
         const URI = forecastURL,
        ERR_PREFIX = ':::LOG:::WeatherService._getHourlyForecastDataAsync(), message: ';
-        let retObj = { periods : '' };
+       let retObj = { periods : '' };
         return fetch( URI)
         .then( res => res.json())
         .then( ( result) => {
@@ -106,11 +136,13 @@ class WeatherService {
     };
 
     // converts a given celcius temp to fahrenheit
-    _toFahrenheit( tempCelcius) {
+    _toFahrenheit( tempCelcius, applyF) {
         let retVal = '';
         if ( tempCelcius) {
             let raw = ( tempCelcius * 9 / 5) + 32;
-            retVal = Math.round( raw) + 'F';
+            retVal = applyF 
+                ? Math.round( raw) + 'F'
+                : Math.round( raw);
         }
         return retVal;
     }

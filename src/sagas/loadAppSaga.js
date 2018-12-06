@@ -12,7 +12,7 @@ export function* _loadApp() {
 
     try {
         // lookup device Id and device document
-        const USER_KEY = yield call( new DataService()._getUserId);
+        const USER_KEY = yield call( new DataService()._getUserIdAsync);
         const USER_DOC = yield call( new DataService()._getDocument, USER_KEY),
            EXP_SESSION = 300000;
         if ( USER_DOC && USER_DOC.location) { 

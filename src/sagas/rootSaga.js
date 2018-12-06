@@ -1,4 +1,4 @@
-import { takeEvery } from 'redux-saga/effects';
+import { all, takeEvery } from 'redux-saga/effects';
 import { _loadApp } from './loadAppSaga';
 import { _searchChange } from './searchChangeSaga';
 import { _extendedSearch } from './extendedSearchSaga';
@@ -12,12 +12,12 @@ import { LOAD_APP, SEARCH_CHANGE, EXTENDED_SEARCH, HOURLY_SEARCH } from '../acti
  */
 export function* rootSaga() {
     
-    yield [
+    yield all([
         takeEvery( LOAD_APP, _loadApp),
         takeEvery( SEARCH_CHANGE, _searchChange),
         takeEvery( EXTENDED_SEARCH, _extendedSearch),
         takeEvery( HOURLY_SEARCH, _hourlySearch)
-    ];
+    ]);
 }
 
 export default rootSaga;
