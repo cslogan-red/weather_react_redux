@@ -58,6 +58,8 @@ class WeatherService {
                                       result.properties.temperature.value, true),
                      tempRealNumber : this._toFahrenheit( 
                                       result.properties.temperature.value, false),
+                          windSpeed : this._toMPH( 
+                                      result.properties.windSpeed.value),
                            rightNow : result.properties.textDescription,
                                icon : result.properties.icon
                     }
@@ -144,6 +146,13 @@ class WeatherService {
                 ? Math.round( raw) + 'F'
                 : Math.round( raw);
         }
+        return retVal;
+    }
+
+    // converts meters per second to miles per hour
+    _toMPH( metersPS) {
+        let retVal = 0;
+        if ( metersPS && metersPS !== 0) retVal = Math.round( metersPS * 2.237);
         return retVal;
     }
 }

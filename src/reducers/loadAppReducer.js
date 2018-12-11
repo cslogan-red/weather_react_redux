@@ -17,10 +17,10 @@ const _loadAppReducer = ( state = INIT_STATE, action) => {
         case LOAD_APP_REQ:
             return Object.assign( {}, state, { showSpinner : true });
         case LOAD_APP_SUCCESS:
-            return Object.assign( {}, state, { showSpinner : false, hideForInit : false });
+            return Object.assign( {}, { showSpinner : false, hideForInit : false });
         case LOAD_APP_FAILURE:
-            return Object.assign( {}, state, { showSpinner : false, hideForInit : true, 
-                                               error : action.error });
+            return Object.assign( {}, { showSpinner : false, hideForInit : true, 
+                                              error : action.error });
         default:
             return state;
     }

@@ -125,11 +125,12 @@ const _buildSearchResult = ( searchObj) => {
         retObj = {
                 location : searchObj.locationText,
             locationName : searchObj.locationName,
-                rightNow : { lineOne : searchObj.currentResult.temperature + ' and ' + 
-                                       searchObj.currentResult.rightNow,
-                             lineTwo : searchObj.currentResult.tempRealNumber - 
-                                       searchObj.gridData.windChill,
-                           lineThree : searchObj.gridData.relativeHumidity + '%' },
+                rightNow : { temp : searchObj.currentResult.temperature + ' and ' + 
+                                    searchObj.currentResult.rightNow,
+                         realTemp : searchObj.currentResult.tempRealNumber - 
+                                    searchObj.gridData.windChill,
+                         humidity : searchObj.gridData.relativeHumidity + '%',
+                             wind : searchObj.currentResult.windSpeed },
                  current : {
                     name : TODAY.name,
                     temp : TODAY.temperature + TODAY.temperatureUnit,

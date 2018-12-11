@@ -6,9 +6,7 @@ class HourlyOutlook extends Component {
     // render implementation
     render() {
 
-        const icon = this.props.icon,
-              hour = this.props.hour,
-              temp = this.props.temp;
+        const { icon, hour, temp } = this.props;
         return(
             <div className="hourly__wrapper">
                 <div className="hourly__container">

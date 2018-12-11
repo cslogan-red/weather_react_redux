@@ -27,8 +27,7 @@ class SearchBar extends Component {
     // render implementation
     render() {
 
-        const location = this.props.location,
-           showSpinner = this.props.showSpinner;
+        const { location, showSpinner } = this.props;
         return(
             <div>
                 { location ? ('') : (

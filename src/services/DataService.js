@@ -46,8 +46,10 @@ class DataService {
         const KEY = window.btoa('' + Math.random() * Math.random() * Math.random() * Math.PI),
            COOKIE = new Cookies(),
            PREFIX = 'default-wid';
-
-        COOKIE.set( PREFIX, KEY, { path : '/' });
+        // expire cookie a month from now
+        let expDate = new Date( Date.now());
+        expDate.setDate( expDate.getDate() + 30);
+        COOKIE.set( PREFIX, KEY, { path : '/', expires : expDate });
     }
 
     // check if user already has cookie present on device, return if so, init if not
@@ -55,8 +57,9 @@ class DataService {
 
         const COOKIE = new Cookies(),
               PREFIX = 'default-wid';
-        if ( COOKIE.get( PREFIX)) {
-            return await COOKIE.get( PREFIX);
+           const UID = await COOKIE.get( PREFIX);
+        if ( UID) {
+            return UID;
         } else {
             this._initCookies();
             return await COOKIE.get( PREFIX);
