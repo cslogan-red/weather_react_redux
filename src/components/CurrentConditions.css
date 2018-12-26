@@ -8,14 +8,12 @@
     padding-bottom: .25em;
 }
 
-.current__tile--container {
-
-    font-size: calc(10px + 2vmin);
-}
-
-.current__rightNow {
+.current__rightNow, .current__hourly--wrapper {
 
     font-size: calc(12px + 2vmin);
+}
+.current__rightNow {
+    
     padding: .25em 0 .25em .5em;
     margin-bottom: .5em;
     border: 2px solid white;
@@ -33,4 +31,17 @@
     font-weight: 500;
     border-bottom: 1px solid white;
     margin-bottom: .25em;
+}
+
+.current__hourly--wrapper {
+
+    display: flex;
+    justify-content: flex-start;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    background-color: #111e38;
+    margin-top: .25em;
+    padding-bottom: .25em;
+    border-radius: 5px;
+    min-height: 60px;
 }

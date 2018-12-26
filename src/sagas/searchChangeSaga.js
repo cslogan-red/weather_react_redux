@@ -44,16 +44,9 @@ export function* _searchChange() {
                 hourlyPeriodData : HOURLY.periods
             },
             RESULT = _buildSearchResult( SEARCH_OBJ);
-            yield call( new DataService()._persistDocument, USER_KEY, {
-                locationName : RESULT.locationName,	
-                    location : RESULT.location,
-                    rightNow : RESULT.rightNow,
-                     current : RESULT.current,
-                     outlook : RESULT.outlook, 
-                    extended : RESULT.extended,
-                      hourly : RESULT.hourly,
-                   timeStamp : Date.now()
-            });
+            yield call( new DataService()._persistDocument, 
+                        USER_KEY, 
+                        Object.assign({}, RESULT, { timeStamp : Date.now() }) );
             yield put( { type : SEARCH_CHANGE_SUCCESS, 
                 payload : {
                 locationName : RESULT.locationName,	
@@ -93,7 +86,7 @@ const _buildSearchResult = ( searchObj) => {
                 let outlook = {
                     name : item.name,
                     temp : item.temperature + item.temperatureUnit,
-                detailed : item.shortForecast,
+                detailed : item.detailedForecast,
                     icon : itemIcon
                 }
                 outlookArr.push( outlook);

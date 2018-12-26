@@ -48,16 +48,3 @@
     border: 2px solid white;
     border-radius: 5px;
 }
-
-.tile__hourly--wrapper {
-
-    display: flex;
-    justify-content: flex-start;
-    overflow-y: hidden;
-    overflow-x: scroll;
-    background-color: #111e38;
-    margin-top: .25em;
-    padding-bottom: .25em;
-    border-radius: 5px;
-    min-height: 60px;
-}
